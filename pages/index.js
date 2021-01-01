@@ -5,43 +5,44 @@ import Circle from '../components/svgs/circle'
 import utilStyles from '../styles/utils.module.css'
 
 export default function Home() {
-  const [ currentPos, setCurrentPos ] = useState({
-    xPos: 500,
-    yPos: 500
-  })
+  const [ currentXPos, setCurrentXPos ] = useState(500)
+  const [ currentYPos, setCurrentYPos ] = useState(500)
 
   const upPress = useKeyPress('w');
   const rightPress = useKeyPress('d');
   const leftPress = useKeyPress('a');
   const downPress = useKeyPress('s');
 
-  const setNewPos = (changeXPos, changeYPos) => {
-    let _newPos = {
-      xPos: currentPos.xPos + changeXPos,
-      yPos: currentPos.yPos + changeYPos
-    }
-    setCurrentPos(_newPos)
+  const setNewXPos = (changeXPos) => {
+    let _newXPos = currentXPos + changeXPos
+    setCurrentXPos(_newXPos)
+  }
+
+  const setNewYPos = (changeYPos) => {
+    let _newYPos = currentYPos + changeYPos
+    setCurrentYPos(_newYPos)
   }
 
   useEffect(() => {
     if (upPress) {
       console.log("UP!")
-      setNewPos(-10, 0)
+      setNewYPos(-10)
     }
     if (rightPress) {
       console.log("RIGHT!")
-      setNewPos(0, 10)
+      setNewXPos(10)
     }
     if (leftPress) {
       console.log("LEFT!")
-      setNewPos(0, -10)
+      setNewXPos(-10)
     }
     if (downPress) {
       console.log("DOWN!")
-      setNewPos(10, 0)
+      setNewYPos(10)
     }
   }, [ 
-    currentPos, 
+    currentXPos,
+    currentYPos,
     upPress, 
     rightPress, 
     leftPress, 
@@ -56,15 +57,15 @@ export default function Home() {
 
       <main>
         <h1 className="title">
-         Very Basic React Game Engine {currentPos.xPos} {currentPos.yPos}
+         Very Basic React Game Engine {currentXPos} {currentYPos}
         </h1>
 
-        <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
-        <h2 className={utilStyles.headingLg}>Blog</h2>
+        <section className={`${utilStyles.gameEnv}`}>
           <Circle
-              xPos={currentPos.xPos ? currentPos.xPos : 500}
-              yPos={currentPos.yPos ? currentPos.yPos : 500}
-            />
+            xPos={currentXPos}
+            yPos={currentYPos}
+            fill="aqua"
+          />
         </section>
 
       </main>
