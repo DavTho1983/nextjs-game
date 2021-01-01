@@ -10,7 +10,7 @@ export default function Home() {
   const [ currentYPos, setCurrentYPos ] = useState(500)
   const [ colourIndex, setColourIndex ] = useState(0)
 
-  const room = useRef(null)
+  const circle = useRef()
 
   const circleColours = [
     "green",
@@ -24,7 +24,10 @@ export default function Home() {
   const leftPress = useKeyPress('a');
   const downPress = useKeyPress('s');
 
-  const setNewXPos = (changeXPos) => {
+  const setNewXPos = (circle, changeXPos) => {
+    let point = circle.createSVGPoint();
+    point.x = 40;
+    point.y = 32;
     let _newColourIndex = (colourIndex + 1) % 4
 
     let _newXPos = currentXPos + changeXPos
@@ -38,7 +41,9 @@ export default function Home() {
       setColourIndex(_newColourIndex)
     }
 
-      setCurrentXPos(_newXPos)
+    console.log("CHECK IF POINT IN CIRCLE REF", circle.isPointInFill(point))
+
+    setCurrentXPos(_newXPos)
   }
 
   const setNewYPos = (changeYPos) => {
@@ -58,17 +63,18 @@ export default function Home() {
   }
 
   useEffect(() => {
+    console.log("CIRCLE", circle.current)
     if (upPress) {
       console.log("UP!")
       setNewYPos(-1)
     }
     if (rightPress) {
       console.log("RIGHT!")
-      setNewXPos(1)
+      setNewXPos(circle, 1)
     }
     if (leftPress) {
       console.log("LEFT!")
-      setNewXPos(-1)
+      setNewXPos(circle, -1)
     }
     if (downPress) {
       console.log("DOWN!")
@@ -78,6 +84,7 @@ export default function Home() {
     currentXPos,
     currentYPos,
     circleColours,
+    circle,
     upPress, 
     rightPress, 
     leftPress, 
@@ -95,10 +102,10 @@ export default function Home() {
          Very Basic React Game Engine {currentXPos} {currentYPos}
         </h1>    
 
-        <Room/>
+        <Room />
 
         {currentXPos && <section className={`${utilStyles.gameEnv}`}>
-        <svg  width="1000" height="1000">
+        <svg ref={circle} width="1000" height="1000">
           <Circle
             xPos={currentXPos}
             yPos={currentYPos}
