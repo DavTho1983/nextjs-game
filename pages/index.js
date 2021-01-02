@@ -4,13 +4,15 @@ import {useKeyPress} from '../hooks/useKeyPress'
 import Circle from '../components/svgs/circle'
 import Room from '../components/svgs/room'
 import utilStyles from '../styles/utils.module.css'
+import { TweenMax, Power3 } from 'gsap'
 
 export default function Home() {
   const [ currentXPos, setCurrentXPos ] = useState(100)
   const [ currentYPos, setCurrentYPos ] = useState(100)
   const [ colourIndex, setColourIndex ] = useState(0)
 
-  const circle = useRef()
+  const circle = useRef(null)
+  const avatar = useRef(null)
   const path = useRef()
 
   const circleColours = [
@@ -31,9 +33,9 @@ export default function Home() {
 
     let _newXPos = currentXPos + changeXPos
 
-    if (_newXPos % 150 === 0) {
-      setColourIndex(_newColourIndex)
-    } 
+    // if (_newXPos % 150 === 0) {
+    //   setColourIndex(_newColourIndex)
+    // } 
 
     let point = circle.current.createSVGPoint();
     point.x = _newXPos;
@@ -54,15 +56,24 @@ export default function Home() {
     let _newYPos = currentYPos + changeYPos
 
 
-    if (_newYPos % 150 === 0) {
-      setColourIndex(_newColourIndex)
-    }
+    // if (_newYPos % 150 === 0) {
+    //   setColourIndex(_newColourIndex)
+    // }
     
     let point = circle.current.createSVGPoint();
     point.x = currentXPos;
     point.y = _newYPos;
 
     console.log("CHECK IF POINT IN PATH REF", point, path.current.isPointInFill(point))
+
+    TweenMax.to(
+			avatar.current,
+			0.2,
+			{
+			  opacity: 1,
+			  ease: Power3.easeInOut
+			}
+    )
 
     if (path.current.isPointInFill(point)) {
       setCurrentYPos(_newYPos)
@@ -74,6 +85,16 @@ export default function Home() {
 
   useEffect(() => {
     console.log("CIRCLE", circle.current)
+    TweenMax.to(
+			circle.current,
+			1,
+			{
+			  opacity: 1,
+			  y: -20,
+			  ease: Power3.easeOut
+			}
+    )
+    
     if (upPress) {
       console.log("UP!")
       setNewYPos(-1)
@@ -108,18 +129,23 @@ export default function Home() {
       </Head>
 
       <main>
-        {/* <h1 className="title">
-         Very Basic React Game Engine {currentXPos} {currentYPos}
-        </h1>     */}
-
-        {/* <Room /> */}
-
         <div className={`${utilStyles.mainContainer}`}>
           {currentXPos && <section className={`${utilStyles.gameEnv}`}>
-            <svg ref={circle} width="1000" height="800" viewBox="0 0 1000 750" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg ref={circle} width="1000" height="800" viewBox="0 0 1000 750" fill="none" opacity="0.3" xmlns="http://www.w3.org/2000/svg">
               <rect width="1000" height="750" fill="white"/>
-              <path ref={path}  fill-rule="evenodd" clip-rule="evenodd" d="M49 51H449V165.239H884V430.332H949V713H214V611.942H172V343.92H49V51Z" fill="#C4C4C4"/>
-              <circle  cx={currentXPos} cy={currentYPos} r="40" stroke="green" strokeWidth="4" fill={circleColours[colourIndex]} />
+              <Room 
+                forwardedRef={path}
+              />
+
+              {/* <path ref={path}  fill-rule="evenodd" clip-rule="evenodd" d="M49 51H449V165.239H884V430.332H949V713H214V611.942H172V343.92H49V51Z" fill="#C4C4C4"/> */}
+              {/* <circle  cx={currentXPos} cy={currentYPos} r="40" stroke="green" strokeWidth="4" fill={circleColours[colourIndex]} /> */}
+              <Circle 
+                xPos={currentXPos}
+                yPos={currentYPos}
+                fill="green"
+                // fill={circleColours[colourIndex]}
+                forwardedRef={avatar}
+              />
             </svg>
           </section>}
         </div>

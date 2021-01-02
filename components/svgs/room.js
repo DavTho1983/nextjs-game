@@ -1,17 +1,12 @@
 import React from 'react';
 
-export const Room = ({ }) => {
+export const Room = ({ forwardedRef }) => {
 
 	return (
-
-		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 473.86 426.71">
-			<g id="Layer_2" data-name="Layer 2">
-				<g id="Layer_1-2" data-name="Layer 1">
-					<polygon class="cls-1" points="473.36 74.79 307.64 74.79 307.64 0.5 0.5 0.5 0.5 264.79 114.79 264.79 114.79 426.21 251.93 426.21 251.93 264.79 307.64 264.79 307.64 220.5 473.36 220.5 473.36 74.79"/>
-				</g>
-			</g>
+		<svg width="1000" height="750" viewBox="0 0 1000 750" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<rect width="1000" height="750" fill="white"/>
+			<path ref={forwardedRef} fill-rule="evenodd" clip-rule="evenodd" d="M449 51H49V343.92H172V611.942H214V713H949V430.332H884V165.239H449V51ZM520 436C558.66 436 590 404.66 590 366C590 327.34 558.66 296 520 296C481.34 296 450 327.34 450 366C450 404.66 481.34 436 520 436Z" fill="#C4C4C4"/>
 		</svg>
-
 	);
 }
 
