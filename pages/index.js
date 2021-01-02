@@ -6,11 +6,12 @@ import Room from '../components/svgs/room'
 import utilStyles from '../styles/utils.module.css'
 
 export default function Home() {
-  const [ currentXPos, setCurrentXPos ] = useState(500)
-  const [ currentYPos, setCurrentYPos ] = useState(500)
+  const [ currentXPos, setCurrentXPos ] = useState(100)
+  const [ currentYPos, setCurrentYPos ] = useState(100)
   const [ colourIndex, setColourIndex ] = useState(0)
 
   const circle = useRef()
+  const path = useRef()
 
   const circleColours = [
     "green",
@@ -24,42 +25,51 @@ export default function Home() {
   const leftPress = useKeyPress('a');
   const downPress = useKeyPress('s');
 
-  const setNewXPos = (circle, changeXPos) => {
-    let point = circle.createSVGPoint();
-    point.x = 40;
-    point.y = 32;
+  const setNewXPos = (changeXPos) => {
+    
     let _newColourIndex = (colourIndex + 1) % 4
 
     let _newXPos = currentXPos + changeXPos
-    if (_newXPos < 50) {
-      _newXPos = currentXPos
-    } else if (_newXPos > 950) {
-      _newXPos = currentXPos
-    }
 
     if (_newXPos % 150 === 0) {
       setColourIndex(_newColourIndex)
+    } 
+
+    let point = circle.current.createSVGPoint();
+    point.x = _newXPos;
+    point.y = currentYPos;
+
+    console.log("CHECK IF POINT IN PATH REF", point, path.current.isPointInFill(point))
+
+    if (path.current.isPointInFill(point)) {
+      console.log("GOT HERE!!!!!!")
+      setCurrentXPos(_newXPos)
+    } else {
+      _newXPos = currentXPos
     }
-
-    console.log("CHECK IF POINT IN CIRCLE REF", circle.isPointInFill(point))
-
-    setCurrentXPos(_newXPos)
   }
 
   const setNewYPos = (changeYPos) => {
     let _newColourIndex = (colourIndex + 1) % 4
     let _newYPos = currentYPos + changeYPos
-    if (_newYPos < 50) {
-      _newYPos = currentYPos
-    } else if (_newYPos > 800) {
-      _newYPos = currentYPos
-    }
+
 
     if (_newYPos % 150 === 0) {
       setColourIndex(_newColourIndex)
     }
     
-    setCurrentYPos(_newYPos)
+    let point = circle.current.createSVGPoint();
+    point.x = currentXPos;
+    point.y = _newYPos;
+
+    console.log("CHECK IF POINT IN PATH REF", point, path.current.isPointInFill(point))
+
+    if (path.current.isPointInFill(point)) {
+      setCurrentYPos(_newYPos)
+    } else {
+      _newYPos = currentYPos
+    }
+
   }
 
   useEffect(() => {
@@ -70,11 +80,11 @@ export default function Home() {
     }
     if (rightPress) {
       console.log("RIGHT!")
-      setNewXPos(circle, 1)
+      setNewXPos(1)
     }
     if (leftPress) {
       console.log("LEFT!")
-      setNewXPos(circle, -1)
+      setNewXPos(-1)
     }
     if (downPress) {
       console.log("DOWN!")
@@ -98,21 +108,22 @@ export default function Home() {
       </Head>
 
       <main>
-        <h1 className="title">
+        {/* <h1 className="title">
          Very Basic React Game Engine {currentXPos} {currentYPos}
-        </h1>    
+        </h1>     */}
 
-        <Room />
+        {/* <Room /> */}
 
-        {currentXPos && <section className={`${utilStyles.gameEnv}`}>
-        <svg ref={circle} width="1000" height="1000">
-          <Circle
-            xPos={currentXPos}
-            yPos={currentYPos}
-            fill={circleColours[colourIndex]}
-          />
-        </svg>
-        </section>}
+        <div className={`${utilStyles.mainContainer}`}>
+          {currentXPos && <section className={`${utilStyles.gameEnv}`}>
+            <svg ref={circle} width="1000" height="800" viewBox="0 0 1000 750" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="1000" height="750" fill="white"/>
+              <path ref={path}  fill-rule="evenodd" clip-rule="evenodd" d="M49 51H449V165.239H884V430.332H949V713H214V611.942H172V343.92H49V51Z" fill="#C4C4C4"/>
+              <circle  cx={currentXPos} cy={currentYPos} r="40" stroke="green" strokeWidth="4" fill={circleColours[colourIndex]} />
+            </svg>
+          </section>}
+        </div>
+        
 
       </main>
     </div>
